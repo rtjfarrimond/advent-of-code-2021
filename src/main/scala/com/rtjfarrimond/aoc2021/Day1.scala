@@ -14,7 +14,7 @@ object Day1 {
     .toList
     .map(_.toInt)
 
-  def part1(): Int = 
+  def part1(): Int =
     loop(0, input)
 
   def part2(): Int =
