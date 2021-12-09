@@ -10,23 +10,25 @@ case class Instruction(direction: Direction, distance: Int)
 case class Position(horizontal: Int, depth: Int) {
   val product = horizontal * depth
 }
-object Position {
-  import Direction._
-  val zero: Position = Position(0, 0)
-  def +(p1: Position, p2: Position): Position =
-    val newHorizontal = p1.horizontal + p2. horizontal
-    val newDepth = p1.depth + p2.depth
-    Position(newHorizontal, newDepth)
 
-  def delta(instruction: Instruction): Position =
-    instruction.direction match {
+case class Submarine(position: Position) {
+
+  import Direction._
+
+  def move(instruction: Instruction): Submarine =
+    val newPos = instruction.direction match {
       case Forward =>
-        Position(instruction.distance, 0)
+        val horizontal = this.position.horizontal + instruction.distance
+        Position(horizontal, this.position.depth)
       case Down =>
-        Position(0, instruction.distance)
+        val depth = this.position.depth + instruction.distance
+        Position(this.position.horizontal, depth)
       case Up =>
-        Position(0, -instruction.distance)
+        val depth = this.position.depth - instruction.distance
+        Position(this.position.horizontal, depth)
     }
+    Submarine(newPos)
+
 }
 
 @main
@@ -49,11 +51,13 @@ object Day2 {
     Instruction(direction, distance)
 
   def part1(): Int =
-    val finalPosition =
-      instructions
-        .map(Position.delta)
-        .fold(Position.zero)(Position.+)
-    finalPosition.product
+    val initialSubmarine = Submarine(Position(0, 0))
+    val moved = instructions
+      .foldLeft[Submarine](initialSubmarine) {
+        case (submarine, instruction) =>
+          submarine.move(instruction)
+      }
+    moved.position.product
 
   def part2(): Int = ???
 
