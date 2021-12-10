@@ -17,13 +17,13 @@ class Day3Spec extends AnyFlatSpec with Matchers {
     val expected = 3
     val actual = Day3.parseInt(bools)
     actual mustBe expected
-  } 
+  }
 
-  // "part 2" must "work" in {
-  //   val expected = ???
-  //   val actual = Day3.part2
-  //
-  //   actual mustBe expected
-  // }
+  "part 2" must "work" in {
+    val expected = 230
+    val actual = Day3.part2
+
+    actual mustBe expected
+  }
 
 }
