@@ -42,8 +42,8 @@ class Day4Spec extends AnyFlatSpec with Matchers {
     card.hasWon mustBe true
   }
 
-  "part 2" must "work" ignore {
-    val expected = 42
+  "part 2" must "work" in {
+    val expected = 1924
     val actual = Day4.part2
 
     actual mustBe expected
