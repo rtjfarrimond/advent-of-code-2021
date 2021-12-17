@@ -12,7 +12,7 @@ class Day3Spec extends AnyFlatSpec with Matchers {
     actual mustBe expected
   }
 
-  "parseInt" must "convert a list of booleans to a base 10 decimal" in {
+  "parseInt" must "convert a list of booleans to a base 10 integer" in {
     val bools = List(false, false, true, true)
     val expected = 3
     val actual = Day3.parseInt(bools)

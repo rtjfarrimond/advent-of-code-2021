@@ -1,4 +1,4 @@
-package com.rtjfarrimond.aoc2021
+package com.rtjfarrimond.aoc2021.day4
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers
