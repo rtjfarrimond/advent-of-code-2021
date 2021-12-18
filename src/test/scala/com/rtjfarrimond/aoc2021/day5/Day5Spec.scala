@@ -12,11 +12,18 @@ class Day5Spec extends AnyFlatSpec with Matchers {
     actual mustBe expected
   }
 
-  "part 2" must "work" ignore {
-    val expected = 42
+  "part 2" must "work" in {
+    val expected = 12
     val actual = Day5.part2
 
     actual mustBe expected
+  }
+
+  "shouldReverse" must "return true if from is greater than to" in {
+    val from = 9
+    val to = 2
+
+    Day5.shouldReverse(from, to) mustBe true
   }
 
 }
