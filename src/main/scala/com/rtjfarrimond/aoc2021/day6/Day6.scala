@@ -17,7 +17,7 @@ object Day6 {
     .split(',')
     .toList
     .map(_.toInt)
-    .map(LanternFish.apply)
+    .map(LanternFish.adult)
 
   def part1(nDays: Int): Long =
     val days = (0 until nDays).toList
@@ -25,10 +25,9 @@ object Day6 {
       case (school, day) =>
         school.ageOneDay
     }
-    schoolAfterNDays.fish.length
+    schoolAfterNDays.fish.values.sum
 
   def part2: Long =
-    // part1(256)
-    42
+    part1(256)
 
 }
