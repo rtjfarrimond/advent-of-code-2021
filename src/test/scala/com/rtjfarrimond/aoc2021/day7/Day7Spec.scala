@@ -26,8 +26,8 @@ class Day7Spec extends AnyFlatSpec with Matchers {
     Day7.getFuelCost(from, to) mustBe 8
   }
 
-  "part 2" must "work" ignore {
-    val expected = -42
+  "part 2" must "work" in {
+    val expected = 168
     val actual = Day7.part2
 
     actual mustBe expected
