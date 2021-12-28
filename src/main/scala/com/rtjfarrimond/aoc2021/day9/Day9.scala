@@ -19,13 +19,20 @@ object Day9:
         .toList
     }
 
+  val xAxisLength = input.head.length
+  val heightMap   = HeightMap(input.flatten, xAxisLength)
+
   def part1: Int =
-    val xAxisLength = input.head.length
-    val heightMap = HeightMap(input.flatten, xAxisLength)
     heightMap
       .lowPoints
       .map((coord, _) => heightMap.riskLevels(coord))
       .sum
 
   def part2: Int =
-    42
+    Basin.explore(heightMap)
+      .toList
+      .map(_.area)
+      .sorted
+      .reverse
+      .take(3)
+      .foldLeft(1)(_ * _)

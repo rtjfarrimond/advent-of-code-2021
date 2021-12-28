@@ -14,13 +14,6 @@ class Day9Spec extends AnyFlatSpec with Matchers {
     actual mustBe expected
   }
 
-  "part 2" must "work" ignore {
-    val expected = -42
-    val actual = Day9.part2
-
-    actual mustBe expected
-  }
-
   "HeightMap.heightAt" must "lookup the correct index" in {
     val index = 21
     val expectedHeight = 42
@@ -84,17 +77,14 @@ class Day9Spec extends AnyFlatSpec with Matchers {
     val maxX = input.head.length
     val heightMap = HeightMap(input.flatten, maxX)
 
-    val coordinates =
-      for {
-        x <- (0 to 9)
-        y <- (0 to 4)
-      } yield (Coordinate(x, y))
-
-    // coordinates.foreach(coord => println(s"$coord: ${heightMap.locations(coord)}"))
-
-    println(heightMap.lowPoints)
-
     heightMap.lowPoints.values must contain theSameElementsAs expected
+  }
+
+  "part 2" must "work" in {
+    val expected = 1134
+    val actual = Day9.part2
+
+    actual mustBe expected
   }
 
 }

@@ -1,16 +1,13 @@
 package com.rtjfarrimond.aoc2021.day9
 
-import scala.util.Try
-
-case class Coordinate(x: Int, y: Int)
 
 sealed trait HeightMap {
 
   def locations: Map[Coordinate, Int]
   def lowPoints: Map[Coordinate, Int]
   def riskLevels: Map[Coordinate, Int]
-  def isLowPoint(coordinate: Coordinate): Boolean
 
+  def isLowPoint(coordinate: Coordinate): Boolean
   def heightAt(coordinate: Coordinate): Option[Int]
   def heightAbove(coordinate: Coordinate): Option[Int]
   def heightBelow(coordinate: Coordinate): Option[Int]
@@ -41,20 +38,20 @@ object HeightMap {
 
     override def heightAbove(coordinate: Coordinate): Option[Int] =
       if (coordinate.y == 0) None
-      else heightAt(Coordinate(coordinate.x, coordinate.y - 1))
+      else locations.get(coordinate.above)
 
     private val maxY = locations.keys.map(_.y).max
     override def heightBelow(coordinate: Coordinate): Option[Int] =
       if (coordinate.y == maxY) None
-      else heightAt(Coordinate(coordinate.x, coordinate.y + 1))
+      else locations.get(coordinate.below)
 
     override def heightLeftOf(coordinate: Coordinate): Option[Int] =
       if (coordinate.x == 0) None
-      else heightAt(Coordinate(coordinate.x - 1, coordinate.y))
+      else locations.get(coordinate.leftOf)
 
     override def heightRightOf(coordinate: Coordinate): Option[Int] =
       if (coordinate.x == maxX) None
-      else heightAt(Coordinate(coordinate.x + 1, coordinate.y))
+      else locations.get(coordinate.rightOf)
 
     override def isLowPoint(coordinate: Coordinate): Boolean =
       val heightAtCoordinate = locations(coordinate)
