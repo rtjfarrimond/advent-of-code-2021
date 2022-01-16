@@ -12,19 +12,6 @@ def runDay10(): Unit =
 
 object Day10:
 
-  val input: List[String] = Source.fromResource("Day10.txt")
-    .getLines
-    .toList
-
-  def closesChunk(previous: Char, current: Char): Boolean =
-    previous match {
-      case '(' if current == ')' => true
-      case '{' if current == '}' => true
-      case '[' if current == ']' => true
-      case '<' if current == '>' => true
-      case _ => false
-    }
-
   val closeCharLookup = Map[Char, Char](
     '(' -> ')',
     '[' -> ']',
@@ -33,8 +20,15 @@ object Day10:
   )
 
   case class Corruption(expected: Char, actual: Char)
+  type IncompleteLine = Stack[Char]
+  type AnalysisResult = Either[IncompleteLine, Corruption]
 
-  def detectCorruption(line: String): Option[Corruption] =
+  val analysed: List[AnalysisResult] = Source.fromResource("Day10.txt")
+    .getLines
+    .toList
+    .map(analyseLine)
+
+  def analyseLine(line: String): AnalysisResult =
 
     def opensChunk(char: Char): Boolean =
       char match {
@@ -45,12 +39,21 @@ object Day10:
         case _ => false
       }
 
-    val stack = scala.collection.mutable.Stack.empty[Char]
+    def closesChunk(previous: Char, current: Char): Boolean =
+      previous match {
+        case '(' if current == ')' => true
+        case '{' if current == '}' => true
+        case '[' if current == ']' => true
+        case '<' if current == '>' => true
+        case _ => false
+      }
+
+    val stack = Stack.empty[Char]
 
     @scala.annotation.tailrec
-    def loop(line: String): Option[Corruption] =
+    def loop(line: String): AnalysisResult =
       if (line == "")
-        None
+        Left(stack)
       else if (stack.isEmpty)
         stack.push(line.head)
         loop(line.tail)
@@ -65,9 +68,10 @@ object Day10:
           loop(line.tail)
         else
           val expected = closeCharLookup(stack(1))
-          Some(Corruption(expected, top))
+          Right(Corruption(expected, top))
 
     loop(line)
+
 
   def part1: Int =
 
@@ -78,41 +82,15 @@ object Day10:
       '>' -> 25137
     )
 
-    input
-      .map(detectCorruption)
+    analysed
       .collect {
-        case Some(corruption) =>
+        case Right(corruption) =>
           scoreLookup(corruption.actual)
       }
       .sum
 
 
   def part2: Long =
-
-    def isCorrupt(line: String): Boolean =
-      detectCorruption(line).isDefined
-
-    def getCompletion(line: String): String =
-      val stack = Stack.empty[Char]
-
-      @scala.annotation.tailrec
-      def loop(line: String): String =
-        if (line.isEmpty)
-          stack.mkString.map(closeCharLookup)
-        else if (stack.isEmpty)
-          stack.push(line.head)
-          loop(line.tail)
-        else
-          val top = stack.top
-          val next = line.head
-          if (closesChunk(top, next))
-            stack.pop
-            loop(line.tail)
-          else // Opens a chunk
-            stack.push(next)
-            loop(line.tail)
-
-      loop(line)
 
     val pointLookup = Map[Char, Long](
       ')' -> 1,
@@ -122,10 +100,13 @@ object Day10:
     )
 
     val scores =
-      input
-        .filterNot(isCorrupt)
-        .map(getCompletion)
-        .map(completion => completion.map(pointLookup))
+      analysed
+        .collect {
+          case Left(incompleteLine) =>
+            incompleteLine
+              .map(closeCharLookup)
+              .map(pointLookup)
+        }
         .map { points =>
           points.foldLeft(0L) { (acc, next) =>
             acc * 5L + next
